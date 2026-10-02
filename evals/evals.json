@@ -1,0 +1,23 @@
+{
+  "skill_name": "streetwear-fashion-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Help me design a couture gown step by step. I have already chosen an ivory satin mermaid silhouette with a short train; preserve those choices. I am undecided about the neckline. Start with a simple visual comparison and useful designer comments, and guide my next decision. I have not accepted a final design.",
+      "expected_output": "A useful initial visual decision round that retains the chosen silhouette, material and train, records the pending neckline choice, and leaves production preparation pending.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Guide me through a unisex tailored jacket for everyday wear. The selected direction is a charcoal wool, hip-length jacket with a relaxed straight silhouette. Keep those choices. Help me decide the front opening with a quick visual sketch and comments. Later I want a pencil illustration, but the design is not approved yet.",
+      "expected_output": "A visual jacket decision round that preserves the selected length, material and silhouette, distinguishes illustration choice from garment design, and keeps production pending.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Help me develop utility streetwear trousers interactively. Keep my selected black matte fabric, straight loose legs and full length. I need to decide cargo-pocket placement; show me quick visual alternatives and explain mobility and pocket-load tradeoffs. Do not assume I have approved a pattern.",
+      "expected_output": "A visual pocket-placement round preserving the selected trouser design, with meaningful functional critique and no premature pattern release.",
+      "files": []
+    }
+  ]
+}

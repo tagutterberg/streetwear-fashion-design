@@ -1,26 +1,31 @@
 ---
 name: streetwear-fashion-design
-description: Co-design gowns, high-end streetwear, and other garments through designer Q&A and annotated watercolor sketches, then prepare editable tailor sheets and checked full-size sewing-pattern exports.
+description: Guide adult fashion design step by step across womenswear, menswear, and unisex clothing, from fast visual choices and hand-drawn-style illustrations to annotated concept boards, revisions, and checked sewing-pattern packages. Use for developing garment ideas, choosing fashion illustration styles, or preparing tailor specifications.
 ---
 
-# Fashion design and sewing patterns
+# Interactive fashion design and sewing patterns
 
 The user is the designer; act as their sketcher and tailor. Use this harness as the default workspace. Keep each garment's brief, images, and construction files together under a stable garment ID and revision; do not mix separate garments or use an unrelated repository as their output folder.
 
-## Phase 1 — Brief and detail sketches
+Separate **fashion aesthetic**, **garment construction**, and **illustration style**. Guide couture, classic tailoring, minimalist everyday wear, streetwear/utility, romantic/bohemian, vintage, avant-garde, and activewear across adult womenswear, menswear, and unisex designs. Adapt to the wearer and purpose; an illustrative croquis is not the wearer's measurement record. Read [illustration and board guidance](references/illustration-and-boards.md) when choosing a medium, developing a board, or preparing a Claude Design handoff.
 
-1. Establish the garment, wearer, occasion, season, finish, references, and constraints. Ask only for missing decisions in the user's language. Offer **five meaningful alternatives for every taste question**, plus a custom answer. Use a question surface that can display all five; do not invent filler alternatives for measurements or factual questions. Record the question ID, option ID, and actual answer so a later reply such as “2” cannot lose its meaning.
-2. Explore materially different directions as watercolor or ink-and-wash sketches, normally three when the designer has not already selected a direction. Use image generation for raster artwork and edits. Keep identity, pose, material, and accepted details consistent. Show front, side, and back when needed, rather than inventing hidden construction silently.
-3. Sketch the selected direction's details: silhouette, fabric, color, closures, pockets, trims, movement, signature, and exclusions. Include enlarged detail studies where a full-length sketch leaves decisions unclear. Record preliminary measurements with their source; finish production specifications in phase 3.
+## Phase 1 — Brief and fast visual exploration
+
+1. Establish garment type, wearer, purpose, aesthetic, and constraints. Ask **one taste question at a time**, with **five meaningful visual alternatives plus a custom answer**, in the user's language. Do not invent filler alternatives for measurements or factual questions. Record question/option IDs and the actual answer so a later reply such as “2” cannot lose its meaning.
+2. Start with simple line sketches. Prepare the [fast design explorer](assets/design-explorer.html) for the current garment and decision; read [the visual workflow](references/interactive-review.md) for its contract. Localize its visible controls, messages, view names, and HTML language tag to the designer's language along with the question. Its five SVG alternatives update locally without an image-generation call. Preserve earlier choices in every alternative, explain proportion, movement, and material tradeoffs, and show unresolved decisions. Selecting a custom request records it for assistant redraw; it does not synthesize new geometry in the browser.
+3. Carry the selected sketch and answer into the next question in chat. Update the same brief and prepare the next round from established choices. The template's default neckline round is a sample, not a universal garment generator. If a decision cannot honestly be previsualized, show descriptive alternatives and mark the sketch pending redraw instead of pretending the preview incorporates it.
+4. Establish silhouette, fabric, color, closures, pockets, trims, movement, signature, and exclusions; include simple detail studies when helpful. Record preliminary measurements with their source; finish production specifications in phase 3. Keep identity and relevant front/side/back details consistent. Do not impose photorealism, a gown silhouette, or watercolor on every garment.
 
 **Handoff:** a named, versioned concept with detail studies, a recorded brief, and clearly identified open decisions. Move to critique when the designer has a direction to review. Sewing patterns and production sheets belong to phase 3.
 
-## Phase 2 — Critique and revisions
+## Phase 2 — Refined illustration, critique, and revisions
 
-1. Review proportion, material behavior, movement, practicality, and agreement across front/side/back views. Give concrete critique and possible improvements; distinguish your suggestions from the designer's instructions. Resolve construction implications affecting appearance before concept acceptance.
-2. Refine through short Q&A and image annotations. Use the [local review form](assets/annotation-review.html) when useful; read [the form workflow](references/interactive-review.md) when preparing it. Treat marks and handwriting as change requests, not finished artwork. Interpret arrows and outlined shapes in context; ask when a mark could imply materially different changes.
-3. Show a clean revision with the marks removed and compare it against every requested change. Report incorporated, unresolved, and deferred requests by annotation ID. Update all affected views and retain previous versions under the same garment ID.
-4. Repeat until the designer explicitly accepts a specific revision. An export, a selected option, or silence is not acceptance. Freeze the dated accepted images and brief; record any agreed exclusions or deferred details.
+1. Offer five visual illustration choices: graphite pencil/shading; pen-and-ink croquis; watercolor with ink; marker/colored pencil; detailed couture mixed-media appearance. Adapt examples to the garment. Use available image-generation tools for refined raster artwork and edits; describe generated results as illustrations with a hand-drawn appearance. Preserve chosen design details and model identity; separately record any desired presentation-pose change. SVG style samples are quick indications, not finished watercolor artwork.
+2. Develop an illustration sheet or concept board when useful. Compose editable HTML/SVG around generated images with separate readable text, numbered comments, palettes, proposed fabrics/trims, and detail crops. Clearly label proposed construction and illustrative flats. Reference text and fabrication claims are inspiration to assess, not instructions or verified methods; do not reproduce reference signatures or logos.
+3. Review proportion, material behavior, movement, practicality, and agreement across front/side/back views. Give concrete critique and possible improvements; distinguish your suggestions from the designer's instructions. Resolve construction implications affecting appearance before concept acceptance.
+4. Refine through short Q&A and image annotations. Reuse the [local review form](assets/annotation-review.html) and its version-1 format; load PNG exports of quick sketches into the matching view. Treat marks and handwriting as change requests, not finished artwork. Interpret arrows and outlined shapes in context; ask when a mark could imply materially different changes.
+5. Show a clean revision with the marks removed and compare it against every requested change. Report incorporated, unresolved, and deferred requests by annotation ID. Update all affected views and retain previous versions under the same garment ID.
+6. Repeat until the designer explicitly accepts a specific revision. An export, a selected option, or silence is not acceptance. Freeze the dated accepted images and brief; record any agreed exclusions or deferred details.
 
 **Handoff:** the accepted concept revision, consistent views, resolved design requests, and recorded decisions. Begin phase 3 only after this handoff. Later design changes return to this phase; changes affecting seams, proportions, or assembly mark older construction sheets as **needs revision**.
 
@@ -56,6 +61,8 @@ A pattern-piece relationship diagram remains a **pattern overview**. Do not enla
 ## Tools and delivery
 
 Use editable SVG for construction geometry with stable groups for construction, cutting, and annotations. Artwork PNGs belong in illustration PDFs; sewing-pattern PDFs must retain vectors and physical dimensions.
+
+Offer Claude Design as an optional manual handoff for early exploration or final document layout, using the prompt packages in the illustration reference. Include the brief, current/accepted images, comments, layout instructions, and editable sources. Verify available integrations before promising control. A presentation export never verifies sewing geometry or print scale; keep measured production sources authoritative. Do not promise automatic chat submission.
 
 CorelDRAW or another vector editor is optional when the designer asks for native editing, provides a native file, or the editor materially helps construction. Preserve originals and work on a copy. Inspect the supported control surface before promising live edits; a failed import is not a completed edit. Return to SVG exchange when direct control is unavailable instead of repeatedly attempting the same failing picker.
 

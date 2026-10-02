@@ -1,5 +1,19 @@
 # Local sketch review
 
+## Fast visual exploration before annotation
+
+Use `assets/design-explorer.html` for phase 1. Copy it into the garment's local output folder and populate its `initial-state` JSON with a prepared `fashion-design-explorer-project`, `schemaVersion: 1`. Localize visible controls, status/error messages, view/category names, handoff text, and the HTML language tag to the designer's language; retain the validation, IDs, and export contract. Escape `<` as `\u003c` when embedding JSON in HTML. The blank template includes an explicitly labelled example neckline round; replace that example for the actual garment.
+
+The project has `garment` (`id`, `name`, `baseRevision`), `brief` (label/value rows), `answers` (earlier question/option/answer records), `unresolved` (strings), `question` (`id`, `question`, `category`, exactly five `options` with stable `id`, `label`, `comment`, and `views`), `baseViews`, `selectedOptionId`, and `customAnswer`. View keys are front/side/back. All alternatives in a round have the same available view keys, with front required. Each view is a complete SVG snapshot; every alternative preserves the same recorded earlier choices. `category` is aesthetic, construction, or illustration. SVG snapshots have a finite viewBox and only the template's permitted basic geometry/text tags and attributes; no scripts, external URLs, styles, images, or foreignObject.
+
+Show one unresolved decision per round. The five option cards display local SVG thumbnails, labels, and short designer comments; a choice immediately changes the current sketch. SVG viewBox units are visual coordinates, not garment millimetres. Earlier answers are read-only context. If the designer wants an earlier choice changed, record the request for the assistant to prepare a new coherent round rather than silently retaining incompatible alternatives.
+
+Save/reopen an explorer project to retain the round, drawings, and selections. Export the selected SVG, PNG, and `fashion-design-choices` JSON (`schemaVersion: 1`) or copy the readable instructions into chat. Choices contain garment/revision, brief, earlier answers plus the current answer, unresolved items, and `needsRedraw`; they do not approve the design. For a custom answer, show the base sketch as pending redraw and disable drawing exports; choices still export the requested change. The assistant reads the answer and prepares the next round or clean revision. There is no automatic chat submission.
+
+To continue into the existing annotation form, load the explorer's PNG for each corresponding view and set the same garment ID and revision. Explorer projects and choices are distinct formats; do not import them as version-1 annotation projects. The annotation format and its coordinate behavior remain unchanged.
+
+Run `node scripts/check_explorer.mjs` for explorer identity, preserved choices, custom-request handling, malformed-input, and syntax checks. In a browser, also check keyboard selection, immediate preview, SVG sanitization, and SVG/PNG export agreement. Prepared projects must validate fully before replacing the current session.
+
 Use `assets/annotation-review.html` as a reusable standalone form. It runs without an account, network service, or build step. The designer guides the design; the form records requests and never generates or approves construction on its own.
 
 ## Prepare a session
@@ -31,7 +45,7 @@ Browser coordinates and raster pixels are visual locations, not garment millimet
 
 Open the prepared HTML in a supported artifact/browser panel. If file preview is unsupported, serve only the garment review folder over localhost and open that URL in the in-app browser. Never require CorelDRAW or deploy the form externally to run a review.
 
-If the in-app browser does not expose normal file downloads, the bundled `scripts/serve_review.py <review-folder> --port 8766` provides a local-only save route. Add `<meta name="local-export" content="enabled">` to the prepared session HTML (not the reusable standalone template), and open `http://127.0.0.1:8766/skisseverksted.html`. Exports are written to that folder's `exports` subfolder without overwriting existing files. The route requires same-origin requests and the review header, accepts only bounded PNG/review-JSON exports, and has no external destination. Attach the saved files to chat manually. A successful server response, not an attempted browser click, establishes that a file was saved.
+If the in-app browser does not expose normal file downloads, the bundled `scripts/serve_review.py <review-folder> --port 8766` provides a local-only save route. Add `<meta name="local-export" content="enabled">` to the prepared session HTML (not the reusable standalone template), and open its localhost URL. Exports are written to that folder's `exports` subfolder without overwriting existing files. The route requires same-origin requests and the review header, accepts only bounded PNG, safe basic SVG, and supported review/explorer JSON exports, and has no external destination. Attach the saved files to chat manually. A successful server response, not an attempted browser click, establishes that a file was saved.
 
 Check a mark at fit view and at zoom, edit its instruction, undo/restore a mark, and export/reopen a project. Confirm the JSON/PNG retain the original image size, view, garment, revision, and annotation IDs. Imported strings must be rendered as text, and imported projects must pass the template's validation before replacing the current review.
 

@@ -1,7 +1,9 @@
 """Serve a local review and save browser exports inside its exports folder."""
 import argparse
 import json
+import math
 import re
+import xml.etree.ElementTree as ET
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -9,9 +11,33 @@ from urllib.parse import parse_qs, urlsplit
 
 
 def export_name(value):
-    if not re.fullmatch(r'[\w.-]{1,180}\.(?:json|png)', value) or value.startswith('.'):
+    if not re.fullmatch(r'[\w.-]{1,180}\.(?:json|png|svg)', value) or value.startswith('.'):
         raise ValueError('Invalid export filename')
     return value
+
+
+def validate_svg(data):
+    if b'<!' in data or b'<?' in data:
+        raise ValueError('SVG declarations are not supported')
+    try:
+        root = ET.fromstring(data)
+    except ET.ParseError as error:
+        raise ValueError('Invalid SVG') from error
+    ns = '{http://www.w3.org/2000/svg}'
+    tags = {'svg', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'text', 'tspan', 'title', 'desc'}
+    attrs = {'viewBox', 'width', 'height', 'x', 'y', 'rx', 'ry', 'cx', 'cy', 'r', 'x1', 'y1', 'x2', 'y2', 'd', 'points', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-dasharray', 'opacity', 'fill-opacity', 'stroke-opacity', 'transform', 'font-size', 'font-family', 'font-weight', 'text-anchor', 'dx', 'dy', 'id'}
+    if root.tag != ns + 'svg':
+        raise ValueError('Invalid SVG namespace')
+    box = [float(v) for v in re.split(r'[\s,]+', root.get('viewBox', '').strip()) if v]
+    if len(box) != 4 or not all(math.isfinite(v) for v in box) or not (0 < box[2] <= 10000 and 0 < box[3] <= 10000) or box[2] * box[3] > 25000000:
+        raise ValueError('Invalid SVG viewBox')
+    allowed_tags = {ns + tag for tag in tags}
+    for number, node in enumerate(root.iter()):
+        if number >= 10000 or node.tag not in allowed_tags:
+            raise ValueError('Unsupported SVG element')
+        for key, value in node.attrib.items():
+            if key not in attrs or re.search(r'[<>]|url\s*\(|javascript:|https?:|data:|@import', value, re.I):
+                raise ValueError('Unsupported SVG attribute')
 
 
 class ReviewHandler(SimpleHTTPRequestHandler):
@@ -30,9 +56,11 @@ class ReviewHandler(SimpleHTTPRequestHandler):
             if len(data) != length: raise ValueError('Incomplete export')
             if name.endswith('.png'):
                 if not data.startswith(b'\x89PNG\r\n\x1a\n'): raise ValueError('Invalid PNG')
+            elif name.endswith('.svg'):
+                validate_svg(data)
             else:
                 value = json.loads(data)
-                if value.get('kind') not in ('fashion-review-project', 'fashion-review-feedback') or value.get('schemaVersion') != 1: raise ValueError('Invalid review JSON')
+                if value.get('kind') not in ('fashion-review-project', 'fashion-review-feedback', 'fashion-design-explorer-project', 'fashion-design-choices') or value.get('schemaVersion') != 1: raise ValueError('Invalid review JSON')
             root = Path(self.directory).resolve()
             folder = (root / 'exports').resolve()
             if folder.parent != root: raise ValueError('Invalid export directory')
@@ -69,5 +97,5 @@ if __name__ == '__main__':
     root = args.directory.resolve(strict=True)
     if not root.is_dir(): parser.error('directory must be a folder')
     server = ThreadingHTTPServer(('127.0.0.1', args.port), partial(ReviewHandler, directory=str(root)))
-    print(f'Review: http://127.0.0.1:{args.port}/skisseverksted.html', flush=True)
+    print(f'Review folder: http://127.0.0.1:{args.port}/', flush=True)
     server.serve_forever()
